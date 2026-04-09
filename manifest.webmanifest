@@ -1,0 +1,25 @@
+{
+  "name": "New Era MMA",
+  "short_name": "New Era MMA",
+  "description": "New Era MMA timetable, coach profiles, and 1-to-1 booking app.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "new%20era%20logo%20transparent%20v2.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "new%20era%20logo%20transparent%20v2.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
