@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#080808"/>
+<meta name="description" content="New Era MMA class timetable, coach profiles, and 1-to-1 booking app."/>
+<title>New Era MMA</title>
+<link rel="icon" type="image/png" href="new era logo transparent v2.png"/>
+<link rel="shortcut icon" href="new era logo transparent v2.png"/>
+<link rel="apple-touch-icon" href="new era logo transparent v2.png"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --gold:#F5B800;--gold2:#FFD040;--gold-dim:rgba(245,184,0,0.12);
+  --bg:#080808;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;
+  --border:rgba(255,255,255,0.07);--borderg:rgba(245,184,0,0.2);
+  --text:#f0ede8;--muted:#777;--muted2:#555;
+  --red:#c0392b;--green:#27ae60;
+  --fd:'Bebas Neue',sans-serif;--fb:'DM Sans',sans-serif;
+  --safe-top:env(safe-area-inset-top,0px);
+  --tab-h:68px;--safe-bottom:env(safe-area-inset-bottom,0px);
+  --tab-offset:var(--safe-bottom);
+  --header-core-h:56px;
+  --header-h:calc(var(--header-core-h) + var(--safe-top));
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);}
+body{font-family:var(--fb);color:var(--text);font-size:16px;display:flex;flex-direction:column;width:min(100vw,430px);margin:0 auto;position:relative;}
+
+/* ── SPLASH ── */
+.splash-screen{
+  position:fixed;inset:0;z-index:300;
+  display:flex;align-items:center;justify-content:center;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(245,184,0,.18) 0%, rgba(245,184,0,.06) 26%, transparent 58%),
+    linear-gradient(180deg, #090909 0%, #060606 100%);
+  opacity:1;visibility:visible;
+  transition:opacity .45s ease, visibility .45s ease;
+}
+.splash-screen.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.splash-screen::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(-55deg, transparent, transparent 42px, rgba(255,255,255,.012) 42px, rgba(255,255,255,.012) 43px);
+}
+.splash-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:2rem;}
+.splash-mark{position:relative;width:156px;height:156px;display:flex;align-items:center;justify-content:center;isolation:isolate;}
+.splash-mark::before{content:'';position:absolute;inset:-22px;border-radius:50%;background:radial-gradient(circle, rgba(245,184,0,.28) 0%, rgba(245,184,0,.08) 34%, transparent 72%);filter:blur(18px);z-index:-1;animation:splashPulse 1.8s ease-in-out infinite;}
+.splash-mark img{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 24px rgba(245,184,0,.18));}
+.splash-title{font-family:var(--fd);font-size:2.4rem;letter-spacing:.12em;line-height:1;margin-top:1.25rem;}
+.splash-title span{color:var(--gold);}
+.splash-tag{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-top:.75rem;}
+.splash-loader{width:120px;height:3px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:1.1rem;}
+.splash-loader::after{content:'';display:block;width:46%;height:100%;background:linear-gradient(90deg, rgba(245,184,0,.2) 0%, var(--gold) 55%, rgba(255,208,64,.45) 100%);animation:splashLoad 1.4s ease-in-out infinite;}
+@keyframes splashPulse{0%,100%{transform:scale(.96);opacity:.8;}50%{transform:scale(1.03);opacity:1;}}
+@keyframes splashLoad{0%{transform:translateX(-115%);}100%{transform:translateX(235%);}}
+
+/* ── HEADER ── */
+.app-header{
+  position:fixed;top:0;left:0;right:0;margin:0 auto;
+  width:min(100vw,430px);z-index:100;
+  height:var(--header-h);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:var(--safe-top) 1.25rem 0;
+  background:rgba(8,8,8,0.96);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--borderg);
+}
+.header-brand{display:flex;align-items:center;gap:.75rem;text-decoration:none;color:var(--text);min-width:0;}
+.header-logo-wrap{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.header-logo-wrap::before{content:'';position:absolute;inset:-8px;border-radius:50%;background:radial-gradient(circle,rgba(245,184,0,.18) 0%,rgba(245,184,0,.06) 36%,transparent 72%);filter:blur(8px);}
+.header-logo-img{position:relative;display:block;width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 0 10px rgba(245,184,0,.18));}
+.header-brand-text{display:flex;flex-direction:column;line-height:1;min-width:0;}
+.header-brand-top{font-family:var(--fd);font-size:1.05rem;letter-spacing:.12em;white-space:nowrap;}
+.header-brand-top span{color:var(--gold);}
+.header-brand-sub{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:4px;white-space:nowrap;}
+.header-ig{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--borderg);display:flex;align-items:center;justify-content:center;color:var(--muted);text-decoration:none;transition:border-color .2s,color .2s,transform .2s;}
+.header-ig svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;}
+.header-ig:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-1px);}
+
+/* ── SCREENS ── */
+.screens{
+  position:fixed;top:var(--header-h);bottom:calc(var(--tab-h) + var(--tab-offset));
+  left:0;right:0;margin:0 auto;
+  width:min(100vw,430px);
+  overflow:hidden;
+}
+.screen{
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active{opacity:1;pointer-events:all;}
+
+/* ── TAB BAR ── */
+.tab-bar{
+  position:fixed;bottom:0;left:0;right:0;margin:0 auto;
+  width:min(100vw,430px);z-index:100;
+  height:calc(var(--tab-h) + var(--tab-offset));
+  padding-bottom:var(--tab-offset);
+  background:rgba(10,10,10,0.97);
+  backdrop-filter:blur(20px);
+  border-top:1px solid var(--borderg);
+  display:flex;align-items:flex-start;
+  box-shadow:0 -14px 28px rgba(0,0,0,.28);
+}
+.tab{
+  flex:1;height:var(--tab-h);display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;cursor:pointer;transition:opacity .2s;border:none;background:transparent;
+  color:var(--muted);padding:0;
+}
+.tab.active{color:var(--gold);}
+.tab svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.tab span{font-size:10px;letter-spacing:0.06em;text-transform:uppercase;}
+
+/* ── SHARED COMPONENTS ── */
+.section-pad{padding:1.5rem 1.25rem;}
+.section-head{margin-bottom:1.5rem;}
+.kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.sh{font-family:var(--fd);font-size:2.2rem;letter-spacing:.04em;line-height:.95;}
+.sub{font-size:14px;color:var(--muted);line-height:1.65;margin-top:.75rem;}
+.card{background:var(--bg2);border:1px solid var(--borderg);border-radius:8px;overflow:hidden;}
+.divider-line{border:none;border-top:1px solid var(--border);margin:0;}
+.gold-btn{font-family:var(--fb);font-size:13px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:var(--gold);color:#000;border:none;padding:14px 24px;border-radius:6px;cursor:pointer;width:100%;transition:background .2s;}
+.gold-btn:hover,.gold-btn:active{background:var(--gold2);}
+.gold-btn:disabled{background:#6f5820;color:rgba(0,0,0,.55);cursor:not-allowed;}
+.ghost-btn{font-family:var(--fb);font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:transparent;color:var(--text);border:1px solid var(--borderg);padding:13px 24px;border-radius:6px;cursor:pointer;width:100%;transition:border-color .2s;}
+.ghost-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ── HOME SCREEN ── */
+.hero-wrap{
+  position:relative;min-height:38vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:2rem 1.25rem 2.5rem;overflow:hidden;
+  background:radial-gradient(ellipse 120% 80% at 50% 60%,rgba(245,184,0,0.1) 0%,transparent 70%);
+}
+.hero-wrap::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(-55deg,transparent,transparent 40px,rgba(255,255,255,0.01) 40px,rgba(255,255,255,0.01) 41px);}
+.hero-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.12) 0%,rgba(0,0,0,.22) 50%,rgba(8,8,8,.55) 100%);pointer-events:none;}
+.hero-logo-shell{position:relative;z-index:1;width:132px;height:132px;display:flex;align-items:center;justify-content:center;margin-bottom:1rem;isolation:isolate;}
+.hero-logo-shell::before{content:'';position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(circle,rgba(245,184,0,.24) 0%,rgba(245,184,0,.08) 34%,transparent 72%);filter:blur(18px);z-index:-1;}
+.hero-logo-real{display:block;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 24px rgba(245,184,0,.22));}
+.hero-kicker{position:relative;z-index:1;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.85rem;display:flex;align-items:center;gap:10px;}
+.hero-kicker::before,.hero-kicker::after{content:'';width:26px;height:1px;background:rgba(245,184,0,.4);}
+.hero-title{position:relative;z-index:1;font-family:var(--fd);font-size:3.8rem;letter-spacing:.06em;line-height:.9;}
+.hero-title .ol{-webkit-text-stroke:1px rgba(245,184,0,.3);color:transparent;}
+.hero-title .go{color:var(--gold);}
+.hero-tag{position:relative;z-index:1;font-size:11px;color:var(--muted);margin-top:.85rem;letter-spacing:.16em;text-transform:uppercase;}
+.hero-loc{position:relative;z-index:1;font-size:12px;color:var(--muted);margin-top:.55rem;letter-spacing:.06em;}
+.hero-actions{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:0 1.25rem 1.5rem;}
+
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--borderg);border-bottom:1px solid var(--borderg);}
+.stat-cell{padding:1rem .5rem;text-align:center;border-right:1px solid var(--borderg);}
+.stat-cell:last-child{border-right:none;}
+.stat-n{font-family:var(--fd);font-size:1.8rem;color:var(--gold);line-height:1;}
+.stat-l{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--borderg);border:1px solid var(--borderg);border-radius:8px;overflow:hidden;margin:1.25rem;}
+.quick-card{background:var(--bg2);padding:1.25rem 1rem;cursor:pointer;transition:background .15s;display:flex;flex-direction:column;gap:.5rem;}
+.quick-card:active{background:var(--bg3);}
+.quick-card svg{width:20px;height:20px;stroke:var(--gold);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.quick-label{font-size:13px;font-weight:500;}
+.quick-desc{font-size:11px;color:var(--muted);line-height:1.4;}
+
+.today-section{padding:0 1.25rem 1.5rem;}
+.today-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.today-title{font-family:var(--fd);font-size:1.4rem;letter-spacing:.04em;}
+.today-day{font-size:11px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;}
+.class-pill{display:flex;align-items:center;gap:.75rem;padding:.85rem 1rem;background:var(--bg2);border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;transition:border-color .15s;}
+.class-pill:active{border-color:var(--borderg);}
+.pill-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.dot-f{background:#4a8c3a;}.dot-s{background:#9c7a2a;}.dot-a{background:#8c3030;}
+.pill-time{font-size:12px;color:var(--muted);min-width:90px;}
+.pill-name{font-size:14px;font-weight:500;flex:1;}
+.no-classes{padding:1.5rem 1rem;text-align:center;color:var(--muted);font-size:14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;}
+
+/* ── TIMETABLE SCREEN ── */
+.day-tabs{display:flex;overflow-x:auto;padding:.75rem 1.25rem;gap:.5rem;scrollbar-width:none;border-bottom:1px solid var(--border);}
+.day-tabs::-webkit-scrollbar{display:none;}
+.day-tab{flex-shrink:0;padding:.5rem .9rem;border-radius:20px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s,color .15s;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:var(--fb);}
+.day-tab.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:500;}
+.tt-classes{padding:.75rem 1.25rem;}
+.tt-class-row{display:flex;gap:.75rem;align-items:flex-start;padding:.9rem 1rem;background:var(--bg2);border-radius:8px;margin-bottom:.5rem;border-left:3px solid transparent;}
+.tt-class-row.lv-f{border-left-color:#4a8c3a;}
+.tt-class-row.lv-s{border-left-color:#9c7a2a;}
+.tt-class-row.lv-a{border-left-color:#8c3030;}
+.tt-time-col{font-size:11px;color:var(--muted);min-width:86px;padding-top:2px;line-height:1.4;}
+.tt-name{font-size:14px;font-weight:500;flex:1;}
+.tt-legend{display:flex;gap:1rem;flex-wrap:wrap;padding:.75rem 1.25rem 0;margin-bottom:.25rem;}
+.tt-li{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);}
+.tt-dot{width:8px;height:8px;border-radius:50%;}
+
+/* ── COACHES SCREEN ── */
+.coach-big{margin:1.25rem;border-radius:10px;overflow:hidden;background:var(--bg2);border:1px solid var(--borderg);}
+.coach-banner-app{height:220px;position:relative;overflow:hidden;background:var(--bg3);}
+.coach-banner-app::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.04) 0%,rgba(0,0,0,.18) 45%,var(--bg2) 100%);}
+.coach-banner-app img{width:100%;height:100%;object-fit:cover;display:block;}
+.coach-banner-app.focus-top img{object-position:center 20%;}
+.coach-banner-app.focus-mick img{object-position:center 16%;}
+.coach-banner-app.focus-right img{object-position:58% 22%;}
+.coach-info-app{padding:1rem 1.25rem 1.25rem;}
+.coach-name-app{font-size:19px;font-weight:500;}
+.coach-role-app{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:2px;}
+.coach-copy-app{font-size:12px;color:var(--muted);line-height:1.6;margin-top:.85rem;}
+.coach-divider{height:1px;background:var(--border);margin:.85rem 0;}
+.coach-disciplines{display:flex;flex-wrap:wrap;gap:.4rem;}
+.disc-tag{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--gold-dim);color:var(--gold);border:1px solid rgba(245,184,0,0.2);}
+.coach-availability{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:.85rem;}
+
+/* ── BOOKING SCREEN ── */
+.booking-wrap{padding:1.25rem;}
+.booking-panel{background:linear-gradient(180deg,rgba(245,184,0,.06) 0%,rgba(255,255,255,.01) 100%);border:1px solid var(--borderg);border-radius:12px;padding:1rem;margin-bottom:1rem;}
+.booking-panel-title{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.booking-panel-copy{font-size:13px;color:var(--muted);line-height:1.6;}
+.booking-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1rem;}
+.booking-step{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;padding:.8rem .7rem;min-height:88px;}
+.booking-step-num{font-family:var(--fd);font-size:1.2rem;color:var(--gold);line-height:1;}
+.booking-step-label{font-size:11px;font-weight:500;margin-top:.35rem;}
+.booking-step-copy{font-size:11px;color:var(--muted);line-height:1.45;margin-top:.25rem;}
+.booking-auth-note{display:flex;align-items:center;justify-content:space-between;gap:.75rem;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;margin-bottom:1rem;}
+.booking-auth-copy{font-size:12px;color:var(--muted);line-height:1.55;}
+.coach-quick-picks{display:grid;grid-template-columns:1fr;gap:.75rem;margin-bottom:1rem;}
+.coach-pick{display:flex;align-items:center;gap:.85rem;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:.7rem;cursor:pointer;transition:border-color .2s,transform .2s,background .2s;}
+.coach-pick:active{transform:scale(.99);}
+.coach-pick.active{border-color:var(--gold);background:rgba(245,184,0,.06);}
+.coach-pick-thumb{width:56px;height:56px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--bg3);}
+.coach-pick-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.coach-pick-thumb.focus-top img{object-position:center 20%;}
+.coach-pick-thumb.focus-mick img{object-position:center 16%;}
+.coach-pick-thumb.focus-right img{object-position:58% 22%;}
+.coach-pick-meta{min-width:0;flex:1;}
+.coach-pick-name{display:block;font-size:14px;font-weight:500;color:var(--text);}
+.coach-pick-role{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-top:2px;}
+.coach-pick-availability{display:block;font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4;}
+.coach-pick-check{width:20px;height:20px;border-radius:50%;border:1px solid var(--borderg);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:transparent;background:transparent;transition:all .2s;}
+.coach-pick.active .coach-pick-check{background:var(--gold);border-color:var(--gold);color:#000;}
+.coach-pick-check svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.booking-coach-card{display:none;background:var(--bg2);border:1px solid var(--borderg);border-radius:12px;overflow:hidden;margin-bottom:1rem;}
+.booking-coach-card.visible{display:block;}
+.booking-coach-media{height:140px;overflow:hidden;background:var(--bg3);}
+.booking-coach-media img{width:100%;height:100%;object-fit:cover;display:block;}
+.booking-coach-media.focus-top img{object-position:center 20%;}
+.booking-coach-media.focus-mick img{object-position:center 16%;}
+.booking-coach-media.focus-right img{object-position:58% 22%;}
+.booking-coach-body{padding:1rem;}
+.booking-coach-name{font-size:18px;font-weight:500;}
+.booking-coach-role{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-top:3px;}
+.booking-coach-bio{font-size:12px;color:var(--muted);line-height:1.6;margin-top:.7rem;}
+.booking-coach-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem;}
+.booking-coach-note{font-size:11px;color:var(--muted);margin-top:.8rem;letter-spacing:.08em;text-transform:uppercase;}
+.form-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem;}
+.form-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.form-input{font-family:var(--fb);font-size:16px;background:var(--bg2);border:1px solid var(--borderg);color:var(--text);padding:12px 14px;border-radius:8px;outline:none;width:100%;transition:border-color .2s;appearance:none;-webkit-appearance:none;}
+.form-input:focus{border-color:var(--gold);}
+.form-input::placeholder{color:var(--muted2);}
+.form-input option{background:#181818;}
+.form-textarea{min-height:90px;resize:vertical;}
+.booking-helper{font-size:12px;color:var(--muted);line-height:1.55;margin-top:.45rem;}
+.slot-grid-app{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem;margin-top:.35rem;}
+.slot-btn-app{font-family:var(--fb);display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:.3rem;background:linear-gradient(180deg,rgba(255,255,255,.035) 0%,rgba(255,255,255,.015) 100%);border:1px solid rgba(245,184,0,.16);color:var(--text);padding:.95rem .95rem 1rem;border-radius:14px;cursor:pointer;transition:border-color .2s,background .2s,color .2s,transform .2s,box-shadow .2s;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,.03);}
+.slot-btn-app:hover{border-color:rgba(245,184,0,.4);background:linear-gradient(180deg,rgba(245,184,0,.08) 0%,rgba(255,255,255,.02) 100%);}
+.slot-btn-app.active{background:linear-gradient(180deg,var(--gold2) 0%,var(--gold) 100%);color:#000;border-color:var(--gold);font-weight:500;box-shadow:0 12px 22px rgba(245,184,0,.16);}
+.slot-btn-app:active{transform:scale(0.98);}
+.slot-time-app{font-size:15px;font-weight:500;letter-spacing:.02em;line-height:1.2;}
+.slot-meta-app{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.slot-btn-app.active .slot-meta-app{color:rgba(0,0,0,.66);}
+.slot-empty-app{grid-column:1/-1;padding:1.1rem;text-align:center;color:var(--muted);font-size:13px;border:1px dashed rgba(245,184,0,.22);border-radius:14px;line-height:1.6;background:rgba(255,255,255,.02);}
+.slot-toolbar{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-top:.35rem;margin-bottom:.25rem;padding:.15rem .1rem;}
+.slot-count{font-size:11px;color:var(--gold);letter-spacing:.12em;text-transform:uppercase;}
+.booking-summary-app{background:rgba(245,184,0,0.06);border:1px solid var(--borderg);border-radius:8px;padding:1rem;font-size:13px;line-height:1.7;color:var(--muted);margin-bottom:1rem;}
+.booking-summary-app strong{color:var(--text);font-weight:500;}
+.booking-summary-app a{color:var(--gold);text-decoration:none;}
+.booking-status-app{font-size:12px;color:var(--gold);min-height:20px;margin-bottom:.75rem;line-height:1.5;}
+.blocked-section{margin-bottom:1rem;}
+.blocked-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.blocked-chips{display:flex;flex-wrap:wrap;gap:.4rem;}
+.blocked-chip-app{font-size:11px;color:var(--muted);border:1px solid var(--border);background:rgba(255,255,255,0.02);padding:.35rem .65rem;border-radius:20px;}
+.booking-actions{display:grid;grid-template-columns:1fr auto;gap:.75rem;align-items:start;}
+.mini-btn{font-family:var(--fb);font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--borderg);background:transparent;color:var(--muted);padding:0 14px;border-radius:8px;cursor:pointer;transition:border-color .2s,color .2s;height:46px;}
+.mini-btn:hover{border-color:var(--gold);color:var(--gold);}
+.booking-help-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem;}
+.booking-help-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:.85rem;display:flex;flex-direction:column;gap:.35rem;}
+.booking-help-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.booking-help-value{font-size:13px;font-weight:500;line-height:1.5;}
+.booking-help-value a{color:var(--gold);text-decoration:none;}
+.modal-overlay{position:fixed;inset:0;z-index:500;display:flex;align-items:center;justify-content:center;padding:1.25rem;background:rgba(0,0,0,.62);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .2s ease;}
+.modal-overlay.visible{opacity:1;pointer-events:auto;}
+.modal-card{width:min(100%,360px);background:linear-gradient(180deg,rgba(255,255,255,.04) 0%,rgba(255,255,255,.02) 100%);border:1px solid var(--borderg);border-radius:18px;padding:1.2rem;box-shadow:0 24px 40px rgba(0,0,0,.35);}
+.modal-kicker{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);}
+.modal-title{font-family:var(--fd);font-size:2rem;letter-spacing:.04em;line-height:.92;margin-top:.55rem;}
+.modal-copy{font-size:13px;color:var(--muted);line-height:1.7;margin-top:.7rem;}
+.modal-summary{margin-top:1rem;padding:1rem;border-radius:14px;background:rgba(245,184,0,.08);border:1px solid rgba(245,184,0,.18);font-size:13px;line-height:1.75;color:var(--text);}
+.modal-actions{display:grid;grid-template-columns:1fr;gap:.65rem;margin-top:1rem;}
+
+@media (max-width:430px){
+  :root{
+    --tab-h:72px;
+    --tab-offset:0px;
+  }
+  .app-header{
+    padding:var(--safe-top) 1rem 0;
+  }
+  .header-brand{
+    gap:.6rem;
+    flex:1;
+  }
+  .header-logo-img{
+    width:36px;
+    height:36px;
+  }
+  .header-brand-top{
+    font-size:.95rem;
+    letter-spacing:.1em;
+  }
+  .header-brand-sub{
+    font-size:8px;
+    letter-spacing:.14em;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .header-ig{
+    width:32px;
+    height:32px;
+    flex-shrink:0;
+  }
+  .section-pad,
+  .booking-wrap,
+  .account-wrap,
+  .info-section{
+    padding-left:1rem;
+    padding-right:1rem;
+  }
+  .hero-actions,
+  .booking-help-row,
+  .booking-actions,
+  .reschedule-box{
+    grid-template-columns:1fr;
+  }
+  .booking-steps{
+    grid-template-columns:1fr;
+  }
+  .booking-auth-note{
+    flex-direction:column;
+    align-items:stretch;
+  }
+  .coach-pick{
+    padding:.8rem;
+  }
+  .slot-grid-app{
+    grid-template-columns:1fr;
+  }
+  .account-summary-row,
+  .booking-item-head,
+  .today-header{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .status-badge{
+    margin-top:.35rem;
+  }
+  .screens{
+    bottom:var(--tab-h);
+  }
+  .tab-bar{
+    width:100%;
+    bottom:0;
+    height:var(--tab-h);
+    padding-bottom:0;
+    border:none;
+    border-radius:0;
+    overflow:hidden;
+    background:rgba(10,10,10,0.94);
+  }
+  .tab{
+    gap:5px;
+  }
+  .tab span{
+    font-size:9px;
+  }
+}
+
+/* ── ACCOUNT SCREEN ── */
+.account-wrap{padding:1.25rem;}
+.auth-shell,.account-shell{display:flex;flex-direction:column;gap:1rem;}
+.auth-role-tabs,.auth-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;}
+.auth-role-tab,.auth-mode-tab{font-family:var(--fb);font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--border);background:var(--bg2);color:var(--muted);padding:.85rem .9rem;border-radius:10px;cursor:pointer;transition:border-color .2s,color .2s,background .2s;}
+.auth-role-tab.active,.auth-mode-tab.active{background:rgba(245,184,0,.08);border-color:var(--gold);color:var(--gold);}
+.auth-card,.account-card{background:var(--bg2);border:1px solid var(--borderg);border-radius:12px;padding:1rem;}
+.auth-note{font-size:12px;color:var(--muted);line-height:1.6;}
+.coach-demo-card{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:12px;padding:.9rem 1rem;}
+.coach-demo-title{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem;}
+.coach-demo-copy{font-size:12px;color:var(--muted);line-height:1.6;}
+.account-summary-row{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;}
+.account-eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);}
+.account-name{font-size:1.15rem;font-weight:500;margin-top:.35rem;}
+.account-meta{font-size:12px;color:var(--muted);line-height:1.6;margin-top:.35rem;}
+.account-section-title{font-family:var(--fd);font-size:1.5rem;letter-spacing:.05em;}
+.account-section-copy{font-size:12px;color:var(--muted);line-height:1.6;margin-top:.4rem;margin-bottom:.8rem;}
+.calendar-toolbar{display:grid;grid-template-columns:1fr;gap:.75rem;margin-bottom:.9rem;}
+.booking-list{display:flex;flex-direction:column;gap:.75rem;}
+.booking-item{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:12px;padding:.95rem;}
+.booking-item-head{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem;}
+.booking-item-title{font-size:14px;font-weight:500;}
+.booking-item-meta{font-size:12px;color:var(--muted);line-height:1.55;margin-top:.25rem;}
+.booking-item-sub{font-size:12px;color:var(--muted);line-height:1.6;margin-top:.6rem;}
+.booking-item-notes{font-size:12px;color:var(--text);line-height:1.6;margin-top:.6rem;padding:.7rem .8rem;background:rgba(255,255,255,.02);border-radius:10px;border:1px solid rgba(255,255,255,.04);}
+.status-badge{display:inline-flex;align-items:center;justify-content:center;font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:.4rem .55rem;border-radius:999px;border:1px solid var(--border);white-space:nowrap;}
+.status-pending{color:#ffd36a;border-color:rgba(245,184,0,.25);background:rgba(245,184,0,.08);}
+.status-confirmed{color:#8fe0a9;border-color:rgba(39,174,96,.28);background:rgba(39,174,96,.1);}
+.status-rescheduled{color:#8ec7ff;border-color:rgba(63,141,219,.28);background:rgba(63,141,219,.1);}
+.booking-item-price{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);margin-top:.65rem;}
+.manage-actions{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:.8rem;}
+.manage-btn{font-family:var(--fb);font-size:11px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--borderg);background:transparent;color:var(--text);padding:.7rem .85rem;border-radius:10px;cursor:pointer;transition:border-color .2s,color .2s,background .2s;}
+.manage-btn:hover{border-color:var(--gold);color:var(--gold);}
+.manage-btn.primary{background:rgba(245,184,0,.08);color:var(--gold);}
+.reschedule-box{display:grid;grid-template-columns:1fr 1fr auto;gap:.55rem;margin-top:.85rem;}
+.empty-state{padding:1rem;border:1px dashed var(--borderg);border-radius:12px;color:var(--muted);font-size:13px;line-height:1.6;text-align:center;}
+
+/* ── INFO SCREEN ── */
+.info-section{padding:1.25rem;}
+.info-card{background:var(--bg2);border:1px solid var(--borderg);border-radius:10px;overflow:hidden;margin-bottom:1rem;}
+.info-row{display:flex;align-items:center;gap:.85rem;padding:1rem 1.25rem;border-bottom:1px solid var(--border);}
+.info-row:last-child{border-bottom:none;}
+.info-icon{width:36px;height:36px;border-radius:8px;background:var(--gold-dim);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.info-icon svg{width:16px;height:16px;stroke:var(--gold);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.info-text-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.info-text-val{font-size:14px;font-weight:500;margin-top:1px;}
+.info-text-val a{color:var(--gold);text-decoration:none;}
+.map-preview{background:var(--bg3);height:120px;border-radius:10px;overflow:hidden;border:1px solid var(--borderg);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;}
+.map-preview-label{font-size:13px;color:var(--muted);text-align:center;}
+.map-preview a{color:var(--gold);font-size:13px;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:.4rem;}
+.map-preview svg{width:28px;height:28px;stroke:var(--gold);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.disciplines-list{padding:0 1.25rem 1.5rem;}
+.disc-item{display:flex;gap:1rem;align-items:flex-start;padding:1rem;background:var(--bg2);border-radius:8px;border:1px solid var(--border);margin-bottom:.6rem;}
+.disc-num-app{font-family:var(--fd);font-size:1.8rem;color:rgba(245,184,0,0.15);min-width:32px;line-height:1;}
+.disc-detail-title{font-size:14px;font-weight:500;margin-bottom:3px;}
+.disc-detail-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+</style>
+</head>
+<body>
+
+<div class="splash-screen" id="splashScreen" aria-hidden="true">
+  <div class="splash-inner">
+    <div class="splash-mark"><img src="new era logo transparent v2.png" alt="New Era MMA logo"/></div>
+    <div class="splash-title">NEW <span>ERA</span> MMA</div>
+    <div class="splash-tag">Train Hard · Fight Smart · Win Together</div>
+    <div class="splash-loader"></div>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="app-header">
+  <a class="header-brand" href="#" onclick="switchTab('home'); return false;">
+    <span class="header-logo-wrap"><img class="header-logo-img" src="new era logo transparent v2.png" alt="New Era MMA logo"/></span>
+    <span class="header-brand-text">
+      <span class="header-brand-top">NEW <span>ERA</span> MMA</span>
+      <span class="header-brand-sub">Drumgor, Craigavon</span>
+    </span>
+  </a>
+  <a class="header-ig" href="https://www.instagram.com/newera.mma/" target="_blank" title="Instagram" aria-label="Instagram">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5" ry="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".8" fill="currentColor" stroke="none"/></svg>
+  </a>
+</header>
+
+<!-- SCREENS -->
+<div class="screens">
+
+  <!-- HOME -->
+  <div class="screen active" id="screen-home">
+    <div class="hero-wrap">
+      <div class="hero-logo-shell">
+        <img class="hero-logo-real" src="new era logo transparent v2.png" alt="New Era MMA logo"/>
+      </div>
+      <div class="hero-kicker">Drumgor, Craigavon</div>
+      <h1 class="hero-title"><span class="ol">NEW</span><br><span class="go">ERA</span><br>MMA</h1>
+      <p class="hero-tag">Train Hard · Fight Smart · Win Together</p>
+      <p class="hero-loc">📍 Drumgor, Craigavon BT65 5BW</p>
+    </div>
+
+    <div class="hero-actions">
+      <button class="gold-btn" onclick="switchTab('timetable')">View Timetable</button>
+      <button class="ghost-btn" onclick="switchTab('book')">Book 1-to-1</button>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-cell"><div class="stat-n">5</div><div class="stat-l">Arts</div></div>
+      <div class="stat-cell"><div class="stat-n">3</div><div class="stat-l">Coaches</div></div>
+      <div class="stat-cell"><div class="stat-n">7</div><div class="stat-l">Days</div></div>
+      <div class="stat-cell"><div class="stat-n">All</div><div class="stat-l">Levels</div></div>
+    </div>
+
+    <div class="quick-grid">
+      <div class="quick-card" onclick="switchTab('timetable')">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        <div class="quick-label">Weekly Timetable</div>
+        <div class="quick-desc">All classes, every day</div>
+      </div>
+      <div class="quick-card" onclick="switchTab('book')">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div class="quick-label">Book 1-to-1</div>
+        <div class="quick-desc">Private sessions</div>
+      </div>
+      <div class="quick-card" onclick="switchTab('coaches')">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div class="quick-label">Coaches</div>
+        <div class="quick-desc">Meet the team</div>
+      </div>
+      <div class="quick-card" onclick="switchTab('info')">
+        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <div class="quick-label">Find Us</div>
+        <div class="quick-desc">Drumgor, Craigavon</div>
+      </div>
+    </div>
+
+    <div class="today-section">
+      <div class="today-header">
+        <div class="today-title">TODAY'S CLASSES</div>
+        <div class="today-day" id="todayDayLabel"></div>
+      </div>
+      <div id="todayClasses"></div>
+    </div>
+  </div>
+
+  <!-- TIMETABLE -->
+  <div class="screen" id="screen-timetable">
+    <div class="tt-legend">
+      <div class="tt-li"><div class="tt-dot" style="background:#4a8c3a"></div>All Levels</div>
+      <div class="tt-li"><div class="tt-dot" style="background:#9c7a2a"></div>Skill Dev</div>
+      <div class="tt-li"><div class="tt-dot" style="background:#8c3030"></div>Advanced</div>
+    </div>
+    <div class="day-tabs" id="dayTabs"></div>
+    <div class="tt-classes" id="ttClasses"></div>
+  </div>
+
+  <!-- COACHES -->
+  <div class="screen" id="screen-coaches">
+    <div style="padding:.5rem 0 1.5rem;">
+      <div style="padding:1.25rem 1.25rem .5rem;">
+        <div class="kicker">The Team</div>
+        <div class="sh">COACHES &<br>FIGHTERS</div>
+        <p class="sub">Real experience, real knowledge — brought to every session.</p>
+      </div>
+      <div id="coachCards"></div>
+    </div>
+  </div>
+
+  <!-- BOOKING -->
+  <div class="screen" id="screen-book">
+    <div class="booking-wrap">
+      <div class="kicker">Private Sessions</div>
+      <div class="sh" style="margin-bottom:.75rem;">BOOK<br>1-TO-1</div>
+      <p class="sub" style="margin-bottom:1.5rem;">Pick a coach and date — available slots auto-filter around class times.</p>
+
+      <div class="booking-panel">
+        <div class="booking-panel-title">How It Works</div>
+        <div class="booking-panel-copy">Choose your coach, pick a day, then lock in one of the live 45-minute slots that stay clear of the class timetable.</div>
+        <div class="booking-steps">
+          <div class="booking-step"><div class="booking-step-num">01</div><div class="booking-step-label">Choose Coach</div><div class="booking-step-copy">Tap a coach card to load their 1-to-1 days.</div></div>
+          <div class="booking-step"><div class="booking-step-num">02</div><div class="booking-step-label">Pick Date</div><div class="booking-step-copy">Class times are blocked out automatically.</div></div>
+          <div class="booking-step"><div class="booking-step-num">03</div><div class="booking-step-label">Request Slot</div><div class="booking-step-copy">Save the request, then call to confirm fast.</div></div>
+        </div>
+      </div>
+
+      <div class="booking-help-row">
+        <div class="booking-help-card">
+          <div class="booking-help-label">Need Help Fast?</div>
+          <div class="booking-help-value"><a href="tel:07586636743">Call 07586 636743</a></div>
+        </div>
+        <div class="booking-help-card">
+          <div class="booking-help-label">Session Price</div>
+          <div class="booking-help-value">£30 for a 45-minute session</div>
+        </div>
+      </div>
+
+      <div class="booking-auth-note" id="bookingAuthNote">
+        <div class="booking-auth-copy" id="bookingAuthCopy">Log in as a client on the Account tab to request and track sessions in the app.</div>
+        <button class="mini-btn" type="button" id="bookingLoginBtn">Open Account</button>
+      </div>
+
+      <form id="appBookingForm">
+        <div class="form-group">
+          <div class="form-label">Quick Select Coach</div>
+          <div class="coach-quick-picks" id="coachQuickPicks"></div>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Your Name</div>
+          <input class="form-input" id="appName" type="text" placeholder="Full name" required/>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Phone Number</div>
+          <input class="form-input" id="appPhone" type="tel" placeholder="07xxx xxxxxx" required/>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Select Coach</div>
+          <select class="form-input" id="appCoach" required>
+            <option value="" disabled selected>Choose a coach...</option>
+            <option value="daire">Daire Toman</option>
+            <option value="mick">Mick McBride</option>
+            <option value="cian">Cian Sweeney</option>
+          </select>
+          <div class="booking-helper">Select a coach to see their live 1-to-1 days and available session windows.</div>
+        </div>
+
+        <div class="booking-coach-card" id="bookingCoachCard"></div>
+
+        <div class="form-group">
+          <div class="form-label">Date</div>
+          <input class="form-input" id="appDate" type="date" required/>
+          <div class="booking-helper" id="bookingDateHint">Choose a coach first to narrow down the best days to book.</div>
+        </div>
+
+        <div class="blocked-section" id="appBlockedSection" style="display:none;">
+          <div class="blocked-label">Class times blocked automatically</div>
+          <div class="blocked-chips" id="appBlockedChips"></div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">Available Slots</div>
+          <div class="slot-toolbar">
+            <div class="slot-count" id="slotCountLabel">No time slots loaded</div>
+          </div>
+          <div class="slot-grid-app" id="appSlotGrid">
+            <div class="slot-empty-app">Select a coach and date to see available slots</div>
+          </div>
+          <input type="hidden" id="appSlot"/>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label">Notes (optional)</div>
+          <textarea class="form-input form-textarea" id="appNotes" placeholder="Goals, experience level, injuries, preferred focus..."></textarea>
+        </div>
+
+        <div class="booking-summary-app" id="appSummary">Select a coach, date, and time slot to see your booking summary.</div>
+        <div class="booking-status-app" id="appStatus"></div>
+        <div class="booking-actions">
+          <button class="gold-btn" type="submit">Request Session</button>
+          <button class="mini-btn" type="button" id="bookingResetBtn">Reset</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="screen" id="screen-info">
+    <div class="info-section">
+      <div class="kicker">Find Us</div>
+      <div class="sh" style="margin-bottom:1.25rem;">CONTACT<br>& INFO</div>
+
+      <a href="https://maps.google.com/?q=Drumgor+Craigavon+BT65+5BW" target="_blank" style="display:block;text-decoration:none;">
+        <div class="map-preview">
+          <div>
+            <svg viewBox="0 0 24 24" style="display:block;margin:0 auto 8px;width:28px;height:28px;stroke:#F5B800;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div style="font-size:13px;color:var(--gold);text-align:center;">Drumgor, Craigavon BT65 5BW</div>
+            <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:4px;">Tap to open in Maps</div>
+          </div>
+        </div>
+      </a>
+
+      <div class="info-card">
+        <div class="info-row">
+          <div class="info-icon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><div class="info-text-label">Address</div><div class="info-text-val">Drumgor, Craigavon<br>BT65 5BW, NI</div></div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16.92z"/></svg></div>
+          <div><div class="info-text-label">Phone</div><div class="info-text-val"><a href="tel:07586636743">07586 636743</a></div></div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+          <div><div class="info-text-label">Instagram</div><div class="info-text-val"><a href="https://www.instagram.com/newera.mma/" target="_blank">@newera.mma</a></div></div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><div class="info-text-label">Beginners Course</div><div class="info-text-val">Saturday 11:00–12:00</div></div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <div><div class="info-text-label">Classes</div><div class="info-text-val">7 days · Kids, Teens & Adults<br>All levels welcome</div></div>
+        </div>
+      </div>
+
+      <div class="kicker" style="margin-top:1rem;">What We Train</div>
+      <div class="sh" style="margin-bottom:1rem;">DISCIPLINES</div>
+      <div class="disciplines-list" style="padding:0;margin-bottom:1.5rem;">
+        <div class="disc-item"><div class="disc-num-app">01</div><div><div class="disc-detail-title">MMA</div><div class="disc-detail-desc">Striking, takedowns, clinch & ground — the complete cage system.</div></div></div>
+        <div class="disc-item"><div class="disc-num-app">02</div><div><div class="disc-detail-title">Muay Thai & Striking</div><div class="disc-detail-desc">Eight-limb striking art — pad work through to sparring.</div></div></div>
+        <div class="disc-item"><div class="disc-num-app">03</div><div><div class="disc-detail-title">Wrestling</div><div class="disc-detail-desc">Takedowns, cage wrestling & fight-team sessions every week.</div></div></div>
+        <div class="disc-item"><div class="disc-num-app">04</div><div><div class="disc-detail-title">No-Gi Grappling</div><div class="disc-detail-desc">Submissions, positional control & modern guard passing.</div></div></div>
+        <div class="disc-item"><div class="disc-num-app">05</div><div><div class="disc-detail-title">Boxing</div><div class="disc-detail-desc">Footwork, combinations & defence — with dedicated sparring.</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div class="screen" id="screen-account">
+    <div class="account-wrap">
+      <div class="kicker">Member Access</div>
+      <div class="sh" style="margin-bottom:.75rem;">ACCOUNT<br>& CALENDAR</div>
+      <p class="sub" style="margin-bottom:1.25rem;">Clients can track their bookings here. Coaches can confirm or reschedule sessions from the calendar.</p>
+
+      <div class="auth-shell" id="authShell">
+        <div class="auth-role-tabs">
+          <button class="auth-role-tab active" type="button" data-auth-role="client">Client</button>
+          <button class="auth-role-tab" type="button" data-auth-role="coach">Coach</button>
+        </div>
+        <div class="auth-mode-tabs" id="authModeTabs">
+          <button class="auth-mode-tab active" type="button" data-auth-mode="login">Login</button>
+          <button class="auth-mode-tab" type="button" data-auth-mode="register" id="authRegisterTab">Register</button>
+        </div>
+        <form class="auth-card" id="authForm">
+          <div class="form-group" id="authNameGroup" style="display:none;">
+            <div class="form-label">Full Name</div>
+            <input class="form-input" id="authName" type="text" placeholder="Your full name"/>
+          </div>
+          <div class="form-group" id="authPhoneGroup" style="display:none;">
+            <div class="form-label">Phone Number</div>
+            <input class="form-input" id="authPhone" type="tel" placeholder="07xxx xxxxxx"/>
+          </div>
+          <div class="form-group">
+            <div class="form-label" id="authIdentifierLabel">Email Address</div>
+            <input class="form-input" id="authIdentifier" type="email" placeholder="name@example.com" required/>
+          </div>
+          <div class="form-group">
+            <div class="form-label">Password</div>
+            <input class="form-input" id="authPassword" type="password" placeholder="Password" required/>
+          </div>
+          <div class="booking-status-app" id="authStatus"></div>
+          <button class="gold-btn" id="authSubmitBtn" type="submit">Login</button>
+        </form>
+        <div class="auth-note" id="authHint">Client login uses Firebase email and password. Register once to request and track bookings inside the app.</div>
+        <div class="coach-demo-card" id="coachDemoCard" style="display:none;">
+          <div class="coach-demo-title">Coach Firebase Accounts</div>
+          <div class="coach-demo-copy">Create coach users in Firebase Authentication, then use those same emails in the coach mapping inside this app.</div>
+        </div>
+      </div>
+
+      <div class="account-shell" id="accountShell" style="display:none;">
+        <div class="account-card">
+          <div class="account-summary-row">
+            <div>
+              <div class="account-eyebrow" id="accountRoleLabel">Account</div>
+              <div class="account-name" id="accountName">Logged in</div>
+              <div class="account-meta" id="accountMeta"></div>
+            </div>
+            <button class="mini-btn" type="button" id="logoutBtn">Log Out</button>
+          </div>
+        </div>
+
+        <div class="account-card" id="clientBookingsPanel" style="display:none;">
+          <div class="account-section-title">MY BOOKINGS</div>
+          <div class="account-section-copy">All booking requests saved under your client account.</div>
+          <div class="booking-list" id="clientBookingsList"></div>
+        </div>
+
+        <div class="account-card" id="coachCalendarPanel" style="display:none;">
+          <div class="account-section-title">COACH CALENDAR</div>
+          <div class="account-section-copy">Filter by date, confirm upcoming sessions, or move them into a new 45-minute slot.</div>
+          <div class="calendar-toolbar">
+            <input class="form-input" id="coachCalendarDate" type="date"/>
+          </div>
+          <div class="booking-list" id="coachBookingsList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-overlay" id="bookingConfirmModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="bookingConfirmTitle">
+    <div class="modal-kicker">Request Saved</div>
+    <div class="modal-title" id="bookingConfirmTitle">1-to-1<br>Requested</div>
+    <div class="modal-copy">Your booking request has been saved. The details are below and the form has been reset for the next booking.</div>
+    <div class="modal-summary" id="bookingConfirmSummary"></div>
+    <div class="modal-actions">
+      <button class="gold-btn" type="button" id="bookingConfirmClose">Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<nav class="tab-bar">
+  <button class="tab active" onclick="switchTab('home')" id="tab-home">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Home</span>
+  </button>
+  <button class="tab" onclick="switchTab('timetable')" id="tab-timetable">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <span>Classes</span>
+  </button>
+  <button class="tab" onclick="switchTab('book')" id="tab-book">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span>Book</span>
+  </button>
+  <button class="tab" onclick="switchTab('coaches')" id="tab-coaches">
+    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    <span>Coaches</span>
+  </button>
+  <button class="tab" onclick="switchTab('info')" id="tab-info">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>Info</span>
+  </button>
+  <button class="tab" onclick="switchTab('account')" id="tab-account">
+    <svg viewBox="0 0 24 24"><path d="M20 21a8 8 0 0 0-16 0"/><circle cx="12" cy="8" r="4"/></svg>
+    <span>Account</span>
+  </button>
+</nav>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script src="firebase-sync.js"></script>
+<script>
+// ── DATA ──
+const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const DAY_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+const schedule = {
+  0:[{t:'09:00–10:30',n:'TKD',lv:'s'},{t:'10:30–12:00',n:'MMA Sparring',lv:'a'}],
+  1:[{t:'11:00–12:00',n:'MMA',lv:'f'},{t:'17:30–18:15',n:'Teens MMA',lv:'f'},{t:'18:15–19:00',n:'Kids Class',lv:'f'},{t:'19:00–20:30',n:'Striking',lv:'s'}],
+  2:[{t:'11:00–12:30',n:'Wrestling + S&C',lv:'s'},{t:'17:00–18:15',n:'Striking',lv:'f'},{t:'18:15–19:00',n:'Boxing',lv:'s'},{t:'19:00–20:00',n:'MMA',lv:'f'},{t:'20:00–21:00',n:'Women Only',lv:'f'}],
+  3:[{t:'11:00–12:00',n:'MMA',lv:'f'},{t:'18:00–19:00',n:'MMA',lv:'f'},{t:'19:00–21:00',n:'Fight Team Wrestling',lv:'a'}],
+  4:[{t:'10:15–11:30',n:'Pad Work',lv:'s'},{t:'17:00–18:15',n:'No-Gi',lv:'f'},{t:'18:15–19:00',n:'Boxing',lv:'s'},{t:'19:00–20:00',n:'Striking',lv:'s'}],
+  5:[{t:'11:00–12:00',n:'MMA',lv:'f'},{t:'15:30–16:30',n:'MMA',lv:'f'},{t:'17:30–18:30',n:'Teens MMA',lv:'f'},{t:'18:15–19:00',n:'Kids Class',lv:'f'},{t:'19:00–20:30',n:'No-Gi',lv:'s'}],
+  6:[{t:'09:00–10:00',n:'MMA',lv:'f'},{t:'10:00–11:00',n:'S&C',lv:'s'},{t:'11:00–12:00',n:'Beginners Course',lv:'f'},{t:'12:00–13:00',n:'Boxing Sparring',lv:'a'}]
+};
+
+const coaches = [
+  {id:'daire',name:'Daire Toman',role:'Head Coach · MMA',image:'daire.jpg',focusClass:'focus-top',disciplines:['MMA','Striking','Pad Work'],bio:'Leads the room with high-level MMA experience, sharp fundamentals, and a pressure-heavy coaching style built for both beginners and fighters.',availabilityLabel:'Mon, Wed, Fri, Sat',
+   availability:{1:[['08:00','10:30'],['12:30','17:00']],3:[['08:00','10:30'],['12:30','17:30']],5:[['08:00','10:30'],['12:30','15:00']],6:[['13:30','17:30']]}},
+  {id:'mick',name:'Mick McBride',role:'Coach · Striking & MMA',image:'mick.png',focusClass:'focus-mick',disciplines:['MMA','Boxing','Wrestling'],bio:'Focuses on clean striking, timing, and crossover skills that transfer directly into MMA rounds and live sparring.',availabilityLabel:'Tue, Thu, Fri, Sat',
+   availability:{2:[['08:00','10:30'],['12:30','16:30']],4:[['12:00','16:30']],5:[['12:30','15:00']],6:[['13:30','17:30']]}},
+  {id:'cian',name:'Cian Sweeney',role:'Coach · Striking & MMA',image:'cian.jpg',focusClass:'focus-right',disciplines:['No-Gi','Wrestling','MMA'],bio:'Brings competition-tested experience with a calm technical approach across MMA, grappling transitions, and fight preparation.',availabilityLabel:'Sun, Mon, Wed, Thu',
+   availability:{0:[['12:30','17:30']],1:[['12:30','17:00']],3:[['12:30','17:30']],4:[['12:00','16:30']]}},
+];
+
+const classScheduleData = {
+  0:[{start:'09:00',end:'10:30',title:'TKD'},{start:'10:30',end:'12:00',title:'MMA Sparring'}],
+  1:[{start:'11:00',end:'12:00',title:'MMA'},{start:'17:30',end:'18:15',title:'Teens MMA'},{start:'18:15',end:'19:00',title:'Kids Class'},{start:'19:00',end:'20:30',title:'Striking'}],
+  2:[{start:'11:00',end:'12:30',title:'Wrestling + S&C'},{start:'17:00',end:'18:15',title:'Striking'},{start:'18:15',end:'19:00',title:'Boxing'},{start:'19:00',end:'20:00',title:'MMA'},{start:'20:00',end:'21:00',title:'Women Only'}],
+  3:[{start:'11:00',end:'12:00',title:'MMA'},{start:'18:00',end:'19:00',title:'MMA'},{start:'19:00',end:'21:00',title:'Fight Team Wrestling'}],
+  4:[{start:'10:15',end:'11:30',title:'Pad Work'},{start:'17:00',end:'18:15',title:'No-Gi'},{start:'18:15',end:'19:00',title:'Boxing'},{start:'19:00',end:'20:00',title:'Striking'}],
+  5:[{start:'11:00',end:'12:00',title:'MMA'},{start:'15:30',end:'16:30',title:'MMA'},{start:'17:30',end:'18:30',title:'Teens MMA'},{start:'18:15',end:'19:00',title:'Kids Class'},{start:'19:00',end:'20:30',title:'No-Gi'}],
+  6:[{start:'09:00',end:'10:00',title:'MMA'},{start:'10:00',end:'11:00',title:'S&C'},{start:'11:00',end:'12:00',title:'Beginners Course'},{start:'12:00',end:'13:00',title:'Boxing Sparring'}]
+};
+
+// ── NAVIGATION ──
+function switchTab(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  document.getElementById('screen-'+id).scrollTop=0;
+}
+
+const splashScreen=document.getElementById('splashScreen');
+let splashDismissed=false;
+
+function hideSplash(){
+  if(splashDismissed)return;
+  splashDismissed=true;
+  splashScreen.classList.add('hidden');
+}
+
+window.addEventListener('load',()=>{
+  window.setTimeout(hideSplash,700);
+});
+
+window.setTimeout(hideSplash,1800);
+
+// ── HOME: TODAY ──
+(function renderToday(){
+  const d = new Date();
+  const di = d.getDay();
+  document.getElementById('todayDayLabel').textContent = DAYS[di];
+  const classes = schedule[di]||[];
+  const el = document.getElementById('todayClasses');
+  if(!classes.length){el.innerHTML='<div class="no-classes">No classes scheduled today</div>';return;}
+  el.innerHTML=classes.map(c=>`
+    <div class="class-pill">
+      <div class="pill-dot dot-${c.lv}"></div>
+      <div class="pill-time">${c.t}</div>
+      <div class="pill-name">${c.n}</div>
+    </div>`).join('');
+})();
+
+// ── TIMETABLE ──
+(function initTimetable(){
+  const tabs = document.getElementById('dayTabs');
+  const today = new Date().getDay();
+  tabs.innerHTML = DAY_SHORT.map((d,i)=>`<button class="day-tab${i===today?' active':''}" onclick="showDay(${i})">${d}</button>`).join('');
+  showDay(today);
+})();
+
+function showDay(di){
+  document.querySelectorAll('.day-tab').forEach((t,i)=>{
+    t.classList.toggle('active',i===di);
+  });
+  const classes = schedule[di]||[];
+  const el = document.getElementById('ttClasses');
+  if(!classes.length){el.innerHTML='<div class="no-classes">No classes on '+DAYS[di]+'</div>';return;}
+  el.innerHTML=classes.map(c=>`
+    <div class="tt-class-row lv-${c.lv}">
+      <div class="tt-time-col">${c.t}</div>
+      <div class="tt-name">${c.n}</div>
+    </div>`).join('');
+}
+
+// ── COACHES ──
+(function renderCoaches(){
+  const el = document.getElementById('coachCards');
+  el.innerHTML = coaches.map(c=>`
+    <div class="coach-big">
+      <div class="coach-banner-app ${c.focusClass}"><img src="${c.image}" alt="${c.name}"/></div>
+      <div class="coach-info-app">
+        <div class="coach-name-app">${c.name}</div>
+        <div class="coach-role-app">${c.role}</div>
+        <div class="coach-copy-app">${c.bio}</div>
+        <div class="coach-divider"></div>
+        <div class="coach-disciplines">
+          ${c.disciplines.map(d=>`<span class="disc-tag">${d}</span>`).join('')}
+        </div>
+        <div class="coach-availability">1-to-1 availability: ${c.availabilityLabel}</div>
+      </div>
+    </div>`).join('');
+})();
+
+// ── BOOKING ──
+const realtime = window.newEraRealtime;
+const BOOKING_KEY='newEraMmaBookingsApp';
+const USERS_KEY='newEraMmaUsersApp';
+const SESSION_USER_KEY='newEraMmaSessionUserApp';
+const SESSION=45,INTERVAL=45,SESSION_PRICE=30;
+const firebaseAuth = realtime && realtime.isConfigured && typeof firebase !== 'undefined' ? firebase.auth() : null;
+const COACH_AUTH_PROFILES={
+  'daire@neweramma.coach':{role:'coach',name:'Daire Toman',coachId:'daire',email:'daire@neweramma.coach'},
+  'mick@neweramma.coach':{role:'coach',name:'Mick McBride',coachId:'mick',email:'mick@neweramma.coach'},
+  'cian@neweramma.coach':{role:'coach',name:'Cian Sweeney',coachId:'cian',email:'cian@neweramma.coach'}
+};
+const DEFAULT_COACH_USERS=[
+  {id:'coach-daire',role:'coach',name:'Daire Toman',username:'daire',password:'coach123',coachId:'daire'},
+  {id:'coach-mick',role:'coach',name:'Mick McBride',username:'mick',password:'coach123',coachId:'mick'},
+  {id:'coach-cian',role:'coach',name:'Cian Sweeney',username:'cian',password:'coach123',coachId:'cian'}
+];
+const rescheduleDrafts={};
+
+function makeId(prefix){return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2,8)}`;}
+function getUsers(){return realtime ? realtime.getUsers() : [];}
+function saveUsers(users){if(realtime){realtime.saveUsers(users).catch(console.error);}}
+function sanitizeUser(user){if(!user)return null;const clean={...user};delete clean.password;return clean;}
+function seedUsers(){
+  if(firebaseAuth)return;
+  const users=getUsers();
+  let changed=false;
+  DEFAULT_COACH_USERS.forEach(coach=>{
+    if(!users.some(user=>user.id===coach.id)){
+      users.push(coach);
+      changed=true;
+    }
+  });
+  if(changed)saveUsers(users);
+}
+function loadCurrentUser(){
+  try{
+    const stored=JSON.parse(localStorage.getItem(SESSION_USER_KEY)||'null');
+    return sanitizeUser(stored);
+  }catch{
+    return null;
+  }
+}
+function setCurrentUser(user){
+  currentUser=sanitizeUser(user);
+  if(currentUser){
+    localStorage.setItem(SESSION_USER_KEY,JSON.stringify(currentUser));
+  }else{
+    localStorage.removeItem(SESSION_USER_KEY);
+  }
+}
+function getStatusClass(status){
+  return status==='confirmed'?'status-confirmed':status==='rescheduled'?'status-rescheduled':'status-pending';
+}
+function getStatusLabel(status){
+  return status==='confirmed'?'Confirmed':status==='rescheduled'?'Rescheduled':'Pending';
+}
+function getCoachName(coachId){
+  const coach=coaches.find(item=>item.id===coachId);
+  return coach?coach.name:'Coach';
+}
+function sortBookings(bookings){
+  return [...bookings].sort((left,right)=>`${left.date}-${left.slotStart}`.localeCompare(`${right.date}-${right.slotStart}`));
+}
+function getBookings(){return realtime ? realtime.getBookings() : [];}
+function saveBookings(bookings){if(realtime){realtime.saveBookings(bookings).catch(console.error);}}
+function upsertBookingRecord(booking){
+  if(realtime&&realtime.upsertBooking){
+    return realtime.upsertBooking(booking).catch(error=>{
+      console.error(error);
+      throw error;
+    });
+  }
+  const bookings=getBookings().filter(item=>item.id!==booking.id);
+  bookings.push(booking);
+  saveBookings(bookings);
+  return Promise.resolve(booking);
+}
+function migrateBookings(){
+  const bookings=getBookings();
+  let changed=false;
+  const normalized=bookings.map((booking,index)=>{
+    const next={...booking};
+    if(!next.id){next.id=makeId(`booking${index}`);changed=true;}
+    if(!next.status){next.status='pending';changed=true;}
+    if(!next.durationMinutes){next.durationMinutes=SESSION;changed=true;}
+    if(!next.pricePounds){next.pricePounds=SESSION_PRICE;changed=true;}
+    if(typeof next.clientName==='undefined'&&next.name){next.clientName=next.name;changed=true;}
+    if(typeof next.clientPhone==='undefined'&&next.phone){next.clientPhone=next.phone;changed=true;}
+    return next;
+  });
+  if(changed)saveBookings(normalized);
+}
+
+seedUsers();
+migrateBookings();
+let currentUser=loadCurrentUser();
+
+function toMins(s){const[h,m]=s.split(':').map(Number);return h*60+m;}
+function toLabel(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function getDayIdx(ds){return new Date(ds+'T12:00:00').getDay();}
+function fmtDate(ds){return new Date(ds+'T12:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});}
+function overlaps(as,ae,bs,be){return as<be&&ae>bs;}
+
+function getSlots(coachId,ds,excludeBookingId=null){
+  if(!coachId||!ds)return[];
+  const di=getDayIdx(ds);
+  const coach=coaches.find(c=>c.id===coachId);
+  const windows=(coach&&coach.availability[di])||[];
+  const classes=classScheduleData[di]||[];
+  const existing=getBookings().filter(b=>b.coach===coachId&&b.date===ds&&b.id!==excludeBookingId);
+  const now=new Date();
+  const isToday=ds===now.toISOString().split('T')[0];
+  const nowMins=now.getHours()*60+now.getMinutes();
+  const slots=[];
+  windows.forEach(w=>{
+    const ws=toMins(w[0]),we=toMins(w[1]);
+    for(let s=ws;s+SESSION<=we;s+=INTERVAL){
+      const e=s+SESSION;
+      const hitsClass=classes.some(c=>overlaps(s,e,toMins(c.start),toMins(c.end)));
+      const hitsBook=existing.some(b=>b.slotStart===s);
+      const isPast=isToday&&s<=nowMins;
+      if(!hitsClass&&!hitsBook&&!isPast)slots.push({start:s,end:e,label:`${toLabel(s)} – ${toLabel(e)}`});
+    }
+  });
+  return slots;
+}
+
+const appCoach=document.getElementById('appCoach');
+const appDate=document.getElementById('appDate');
+const appSlot=document.getElementById('appSlot');
+const appSlotGrid=document.getElementById('appSlotGrid');
+const appSummary=document.getElementById('appSummary');
+const appStatus=document.getElementById('appStatus');
+const appBlockedSection=document.getElementById('appBlockedSection');
+const appBlockedChips=document.getElementById('appBlockedChips');
+const coachQuickPicks=document.getElementById('coachQuickPicks');
+const bookingCoachCard=document.getElementById('bookingCoachCard');
+const bookingDateHint=document.getElementById('bookingDateHint');
+const slotCountLabel=document.getElementById('slotCountLabel');
+const bookingResetBtn=document.getElementById('bookingResetBtn');
+const bookingSubmitBtn=document.querySelector('#appBookingForm button[type="submit"]');
+const bookingAuthNote=document.getElementById('bookingAuthNote');
+const bookingAuthCopy=document.getElementById('bookingAuthCopy');
+const bookingLoginBtn=document.getElementById('bookingLoginBtn');
+const bookingConfirmModal=document.getElementById('bookingConfirmModal');
+const bookingConfirmSummary=document.getElementById('bookingConfirmSummary');
+const bookingConfirmClose=document.getElementById('bookingConfirmClose');
+const authShell=document.getElementById('authShell');
+const accountShell=document.getElementById('accountShell');
+const authForm=document.getElementById('authForm');
+const authNameGroup=document.getElementById('authNameGroup');
+const authName=document.getElementById('authName');
+const authPhoneGroup=document.getElementById('authPhoneGroup');
+const authPhone=document.getElementById('authPhone');
+const authIdentifier=document.getElementById('authIdentifier');
+const authIdentifierLabel=document.getElementById('authIdentifierLabel');
+const authPassword=document.getElementById('authPassword');
+const authStatus=document.getElementById('authStatus');
+const authHint=document.getElementById('authHint');
+const authSubmitBtn=document.getElementById('authSubmitBtn');
+const authRegisterTab=document.getElementById('authRegisterTab');
+const coachDemoCard=document.getElementById('coachDemoCard');
+const accountRoleLabel=document.getElementById('accountRoleLabel');
+const accountName=document.getElementById('accountName');
+const accountMeta=document.getElementById('accountMeta');
+const logoutBtn=document.getElementById('logoutBtn');
+const clientBookingsPanel=document.getElementById('clientBookingsPanel');
+const clientBookingsList=document.getElementById('clientBookingsList');
+const coachCalendarPanel=document.getElementById('coachCalendarPanel');
+const coachCalendarDate=document.getElementById('coachCalendarDate');
+const coachBookingsList=document.getElementById('coachBookingsList');
+let authView={role:'client',mode:'login'};
+
+// set min date to today
+const todayStr=new Date().toISOString().split('T')[0];
+appDate.min=todayStr;
+coachCalendarDate.value=todayStr;
+coachCalendarDate.min=todayStr;
+
+function renderAuthFormState(){
+  if(authView.role==='coach')authView.mode='login';
+  document.querySelectorAll('[data-auth-role]').forEach(button=>button.classList.toggle('active',button.dataset.authRole===authView.role));
+  document.querySelectorAll('[data-auth-mode]').forEach(button=>button.classList.toggle('active',button.dataset.authMode===authView.mode));
+  authNameGroup.style.display=authView.role==='client'&&authView.mode==='register'?'flex':'none';
+  authPhoneGroup.style.display=authView.role==='client'&&authView.mode==='register'?'flex':'none';
+  authRegisterTab.style.display=authView.role==='client'?'block':'none';
+  authIdentifierLabel.textContent='Email Address';
+  authIdentifier.placeholder=authView.role==='coach'?'coach@example.com':'name@example.com';
+  authSubmitBtn.textContent=authView.role==='client'&&authView.mode==='register'?'Create Client Account':'Login';
+  authHint.textContent=authView.role==='coach'
+    ?'Coach accounts use Firebase email and password. After sign-in, the email must match a mapped coach profile.'
+    :(authView.mode==='register'?'Create a client account with your name, phone number, email, and password to track bookings in the app.':'Client login uses your Firebase email and password to load your bookings.');
+  coachDemoCard.style.display=authView.role==='coach'?'block':'none';
+  authStatus.textContent='';
+}
+
+function getUserById(userId){
+  return getUsers().find(user=>user.id===userId);
+}
+
+function getFirebaseErrorMessage(error, role){
+  const code=error && error.code;
+  if(code==='auth/email-already-in-use')return 'That email is already registered.';
+  if(code==='auth/invalid-email')return 'Enter a valid email address.';
+  if(code==='auth/weak-password')return 'Password should be at least 6 characters.';
+  if(code==='auth/invalid-credential' || code==='auth/wrong-password' || code==='auth/user-not-found')return `${role==='coach'?'Coach':'Client'} login failed. Check your email and password.`;
+  return error && error.message ? error.message : 'Authentication failed. Check your Firebase setup and try again.';
+}
+
+async function resolveFirebaseProfile(firebaseUser){
+  if(!firebaseUser)return null;
+  const existingProfile=getUserById(firebaseUser.uid);
+  if(existingProfile)return sanitizeUser(existingProfile);
+
+  const email=(firebaseUser.email||'').toLowerCase();
+  const coachProfile=COACH_AUTH_PROFILES[email];
+  if(coachProfile){
+    const profile={id:firebaseUser.uid,...coachProfile};
+    await realtime.upsertUser(profile);
+    return sanitizeUser(profile);
+  }
+
+  const profile={
+    id:firebaseUser.uid,
+    role:'client',
+    name:firebaseUser.displayName||email.split('@')[0]||'Client',
+    phone:'',
+    email:firebaseUser.email||''
+  };
+  await realtime.upsertUser(profile);
+  return sanitizeUser(profile);
+}
+
+function renderBookingAccess(){
+  const isClient=currentUser&&currentUser.role==='client';
+  const isCoach=currentUser&&currentUser.role==='coach';
+  bookingAuthNote.style.display=isClient?'none':'flex';
+  bookingSubmitBtn.disabled=!isClient;
+  if(isClient){
+    if(!appName.value.trim())appName.value=currentUser.name||'';
+    if(!appPhone.value.trim())appPhone.value=currentUser.phone||'';
+  }else{
+    appName.value='';
+    appPhone.value='';
+  }
+  if(!currentUser){
+    bookingAuthCopy.textContent='Log in as a client on the Account tab to request and track sessions in the app.';
+  }else if(isCoach){
+    bookingAuthCopy.textContent='You are logged in as a coach. Manage client sessions from the Account tab calendar.';
+  }
+}
+
+function renderCoachQuickPicks(){
+  coachQuickPicks.innerHTML=coaches.map(coach=>`
+    <button class="coach-pick${appCoach.value===coach.id?' active':''}" type="button" data-coach="${coach.id}">
+      <span class="coach-pick-thumb ${coach.focusClass}"><img src="${coach.image}" alt="${coach.name}"/></span>
+      <span class="coach-pick-meta">
+        <span class="coach-pick-name">${coach.name}</span>
+        <span class="coach-pick-role">${coach.role}</span>
+        <span class="coach-pick-availability">${coach.availabilityLabel}</span>
+      </span>
+      <span class="coach-pick-check" aria-hidden="true"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+    </button>
+  `).join('');
+}
+
+function renderCoachCard(){
+  const coach=coaches.find(item=>item.id===appCoach.value);
+  if(!coach){
+    bookingCoachCard.classList.remove('visible');
+    bookingCoachCard.innerHTML='';
+    return;
+  }
+  bookingCoachCard.classList.add('visible');
+  bookingCoachCard.innerHTML=`
+    <div class="booking-coach-media ${coach.focusClass}"><img src="${coach.image}" alt="${coach.name}"/></div>
+    <div class="booking-coach-body">
+      <div class="booking-coach-name">${coach.name}</div>
+      <div class="booking-coach-role">${coach.role}</div>
+      <div class="booking-coach-bio">${coach.bio}</div>
+      <div class="booking-coach-tags">${coach.disciplines.map(item=>`<span class="disc-tag">${item}</span>`).join('')}</div>
+      <div class="booking-coach-note">1-to-1 days: ${coach.availabilityLabel}</div>
+    </div>
+  `;
+}
+
+function renderDateHint(){
+  const coach=coaches.find(item=>item.id===appCoach.value);
+  const ds=appDate.value;
+  if(!coach){
+    bookingDateHint.textContent='Choose a coach first to narrow down the best days to book.';
+    return;
+  }
+  if(!ds){
+    bookingDateHint.textContent=`${coach.name} typically offers private sessions on ${coach.availabilityLabel}.`;
+    return;
+  }
+  const dayName=DAYS[getDayIdx(ds)];
+  if(!coach.availability[getDayIdx(ds)]){
+    bookingDateHint.textContent=`${coach.name} does not take 1-to-1 sessions on ${dayName}. Try one of these days: ${coach.availabilityLabel}.`;
+    return;
+  }
+  bookingDateHint.textContent=`${coach.name} is available on ${dayName}. Group classes on that day are blocked out automatically below.`;
+}
+
+function resetBookingForm(){
+  if(!currentUser||currentUser.role!=='client'){
+    document.getElementById('appName').value='';
+    document.getElementById('appPhone').value='';
+  }
+  document.getElementById('appNotes').value='';
+  appSlot.value='';
+  appCoach.value='';
+  appDate.value='';
+  appStatus.textContent='';
+  renderSlots();
+}
+
+function showBookingConfirmation(details){
+  bookingConfirmSummary.innerHTML=`<strong>${details.coach}</strong><br>${details.date} · ${details.slot}<br>45 minutes · £${SESSION_PRICE}<br>Call <a href="tel:07586636743">07586 636743</a> to confirm.`;
+  bookingConfirmModal.classList.add('visible');
+  bookingConfirmModal.setAttribute('aria-hidden','false');
+}
+
+function hideBookingConfirmation(){
+  bookingConfirmModal.classList.remove('visible');
+  bookingConfirmModal.setAttribute('aria-hidden','true');
+}
+
+function renderClientBookings(){
+  if(!currentUser||currentUser.role!=='client')return;
+  const bookings=sortBookings(getBookings().filter(booking=>booking.clientId===currentUser.id));
+  if(!bookings.length){
+    clientBookingsList.innerHTML='<div class="empty-state">No bookings yet. Use the booking tab to request your first 45-minute session.</div>';
+    return;
+  }
+  clientBookingsList.innerHTML=bookings.map(booking=>`
+    <div class="booking-item">
+      <div class="booking-item-head">
+        <div>
+          <div class="booking-item-title">${getCoachName(booking.coach)}</div>
+          <div class="booking-item-meta">${fmtDate(booking.date)} · ${booking.slot}<br>${booking.durationMinutes||SESSION} minutes · £${booking.pricePounds||SESSION_PRICE}</div>
+        </div>
+        <span class="status-badge ${getStatusClass(booking.status)}">${getStatusLabel(booking.status)}</span>
+      </div>
+      <div class="booking-item-sub">Phone: ${booking.clientPhone||currentUser.phone||'Not provided'}</div>
+      ${booking.notes?`<div class="booking-item-notes">${booking.notes}</div>`:''}
+      <div class="booking-item-price">Session price: £${booking.pricePounds||SESSION_PRICE}</div>
+    </div>
+  `).join('');
+}
+
+function syncCoachCalendarDate(){
+  if(!currentUser||currentUser.role!=='coach')return;
+  const bookings=sortBookings(getBookings().filter(booking=>booking.coach===currentUser.coachId));
+  if(!bookings.length)return;
+  const selectedDate=coachCalendarDate.value||todayStr;
+  const hasSelectedDateBookings=bookings.some(booking=>booking.date===selectedDate);
+  if(hasSelectedDateBookings)return;
+  const nextDate=bookings[0].date;
+  coachCalendarDate.value=nextDate;
+}
+
+function renderCoachCalendar(){
+  if(!currentUser||currentUser.role!=='coach')return;
+  syncCoachCalendarDate();
+  const selectedDate=coachCalendarDate.value||todayStr;
+  const bookings=sortBookings(getBookings().filter(booking=>booking.coach===currentUser.coachId&&booking.date===selectedDate));
+  if(!bookings.length){
+    coachBookingsList.innerHTML='<div class="empty-state">No bookings scheduled for the selected date.</div>';
+    return;
+  }
+  coachBookingsList.innerHTML=bookings.map(booking=>{
+    const draft=rescheduleDrafts[booking.id]||{date:booking.date,slot:''};
+    const slotOptions=getSlots(booking.coach,draft.date,booking.id);
+    const optionMarkup=slotOptions.length
+      ?`<option value="">Choose new slot</option>${slotOptions.map(slot=>`<option value="${slot.label}" ${draft.slot===slot.label?'selected':''}>${slot.label}</option>`).join('')}`
+      :'<option value="">No slots available</option>';
+    return `
+      <div class="booking-item">
+        <div class="booking-item-head">
+          <div>
+            <div class="booking-item-title">${booking.clientName||'Client booking'}</div>
+            <div class="booking-item-meta">${fmtDate(booking.date)} · ${booking.slot}<br>${booking.durationMinutes||SESSION} minutes · £${booking.pricePounds||SESSION_PRICE}</div>
+          </div>
+          <span class="status-badge ${getStatusClass(booking.status)}">${getStatusLabel(booking.status)}</span>
+        </div>
+        <div class="booking-item-sub">Phone: ${booking.clientPhone||'Not provided'}</div>
+        ${booking.notes?`<div class="booking-item-notes">${booking.notes}</div>`:''}
+        <div class="manage-actions">
+          <button class="manage-btn primary" type="button" data-confirm-booking="${booking.id}">Confirm</button>
+        </div>
+        <div class="reschedule-box">
+          <input class="form-input" type="date" value="${draft.date}" min="${todayStr}" data-reschedule-date="${booking.id}"/>
+          <select class="form-input" data-reschedule-slot="${booking.id}">${optionMarkup}</select>
+          <button class="manage-btn" type="button" data-save-reschedule="${booking.id}">Reschedule</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAccountScreen(){
+  const loggedIn=Boolean(currentUser);
+  authShell.style.display=loggedIn?'none':'flex';
+  accountShell.style.display=loggedIn?'flex':'none';
+  if(!loggedIn)return;
+  if(currentUser.role==='coach'){
+    accountRoleLabel.textContent='Coach Portal';
+    accountName.textContent=currentUser.name;
+    accountMeta.textContent=`Username: ${currentUser.username} · Sessions are £${SESSION_PRICE} for ${SESSION} minutes.`;
+    clientBookingsPanel.style.display='none';
+    coachCalendarPanel.style.display='block';
+    renderCoachCalendar();
+  }else{
+    accountRoleLabel.textContent='Client Account';
+    accountName.textContent=currentUser.name;
+    accountMeta.textContent=`Phone: ${currentUser.phone} · Sessions are £${SESSION_PRICE} for ${SESSION} minutes.`;
+    clientBookingsPanel.style.display='block';
+    coachCalendarPanel.style.display='none';
+    renderClientBookings();
+  }
+}
+
+function renderSlots(){
+  const cid=appCoach.value,ds=appDate.value;
+  appStatus.textContent='';
+  renderCoachQuickPicks();
+  renderCoachCard();
+  renderDateHint();
+  renderBookingAccess();
+
+  // blocked classes
+  if(ds){
+    const di=getDayIdx(ds);
+    const cls=classScheduleData[di]||[];
+    if(cls.length){
+      appBlockedSection.style.display='block';
+      appBlockedChips.innerHTML=cls.map(c=>`<div class="blocked-chip-app">${c.start}–${c.end} · ${c.title}</div>`).join('');
+    } else {
+      appBlockedSection.style.display='none';
+    }
+  } else {
+    appBlockedSection.style.display='none';
+  }
+
+  if(!cid||!ds){
+    slotCountLabel.textContent='No time slots loaded';
+    appSlotGrid.innerHTML='<div class="slot-empty-app">Select a coach and date first</div>';
+    appSummary.innerHTML='Select a coach, date, and time slot to see your booking summary.';
+    return;
+  }
+  const coach=coaches.find(c=>c.id===cid);
+  const di=getDayIdx(ds);
+  if(!coach.availability[di]){
+    slotCountLabel.textContent='No slots on this day';
+    appSlotGrid.innerHTML=`<div class="slot-empty-app">${coach.name} is not available for 1-to-1s on ${DAYS[di]}.</div>`;
+    appSlot.value='';renderSummary();return;
+  }
+  const slots=getSlots(cid,ds);
+  if(!slots.length){
+    slotCountLabel.textContent='0 slots available';
+    appSlotGrid.innerHTML='<div class="slot-empty-app">No slots available on this day — all times are taken by classes or existing bookings.</div>';
+    appSlot.value='';renderSummary();return;
+  }
+  if(!slots.some(s=>s.label===appSlot.value))appSlot.value='';
+  slotCountLabel.textContent=`${slots.length} slot${slots.length===1?'':'s'} available`;
+  appSlotGrid.innerHTML=slots.map(s=>`<button class="slot-btn-app${appSlot.value===s.label?' active':''}" type="button" data-slot="${s.label}"><span class="slot-time-app">${s.label}</span><span class="slot-meta-app">45 minute session</span></button>`).join('');
+  renderSummary();
+}
+
+function renderSummary(){
+  const cid=appCoach.value,ds=appDate.value,slot=appSlot.value;
+  if(!cid||!ds||!slot){appSummary.innerHTML='Select a coach, date, and time slot to see your booking summary.';return;}
+  const coach=coaches.find(c=>c.id===cid);
+  appSummary.innerHTML=`<strong>${coach.name}</strong><br>${fmtDate(ds)} · ${slot}<br>${coach.role}<br>45 minutes · £${SESSION_PRICE}<br>Call <a href="tel:07586636743">07586 636743</a> to confirm or send the request below.`;
+}
+
+document.querySelectorAll('[data-auth-role]').forEach(button=>button.addEventListener('click',()=>{
+  authView.role=button.dataset.authRole;
+  renderAuthFormState();
+}));
+document.querySelectorAll('[data-auth-mode]').forEach(button=>button.addEventListener('click',()=>{
+  authView.mode=button.dataset.authMode;
+  renderAuthFormState();
+}));
+
+authForm.addEventListener('submit',async event=>{
+  event.preventDefault();
+  if(firebaseAuth){
+    const email=authIdentifier.value.trim().toLowerCase();
+    const password=authPassword.value.trim();
+    try{
+      if(authView.role==='client'&&authView.mode==='register'){
+        const nameValue=authName.value.trim();
+        const phoneValue=authPhone.value.trim();
+        if(!nameValue||!phoneValue||!email||!password){authStatus.textContent='Enter your name, phone number, email, and password.';return;}
+        const credential=await firebaseAuth.createUserWithEmailAndPassword(email,password);
+        const profile={id:credential.user.uid,role:'client',name:nameValue,phone:phoneValue,email};
+        await realtime.upsertUser(profile);
+        setCurrentUser(profile);
+      }else if(authView.role==='client'){
+        const credential=await firebaseAuth.signInWithEmailAndPassword(email,password);
+        const profile=await resolveFirebaseProfile(credential.user);
+        if(profile.role!=='client'){
+          await firebaseAuth.signOut();
+          authStatus.textContent='This account is not a client account.';
+          return;
+        }
+        setCurrentUser(profile);
+      }else{
+        const credential=await firebaseAuth.signInWithEmailAndPassword(email,password);
+        const profile=await resolveFirebaseProfile(credential.user);
+        if(profile.role!=='coach'){
+          await firebaseAuth.signOut();
+          authStatus.textContent='This Firebase account is not mapped to a coach profile.';
+          return;
+        }
+        setCurrentUser(profile);
+      }
+      authForm.reset();
+      renderAccountScreen();
+      renderSlots();
+      switchTab('account');
+    }catch(error){
+      authStatus.textContent=getFirebaseErrorMessage(error,authView.role);
+    }
+    return;
+  }
+
+  const users=getUsers();
+  const identifier=authIdentifier.value.trim().toLowerCase();
+  const password=authPassword.value.trim();
+  if(authView.role==='client'&&authView.mode==='register'){
+    const nameValue=authName.value.trim();
+    if(!nameValue||!identifier||!password){authStatus.textContent='Enter your name, phone number, and password.';return;}
+    if(users.some(user=>user.role==='client'&&user.phone?.toLowerCase()===identifier)){authStatus.textContent='A client account already exists for that phone number.';return;}
+    const newUser={id:makeId('client'),role:'client',name:nameValue,phone:identifier,password};
+    users.push(newUser);
+    saveUsers(users);
+    setCurrentUser(newUser);
+  }else if(authView.role==='client'){
+    const user=users.find(item=>item.role==='client'&&item.phone?.toLowerCase()===identifier&&item.password===password);
+    if(!user){authStatus.textContent='Client login failed. Check your phone number and password.';return;}
+    setCurrentUser(user);
+  }else{
+    const user=users.find(item=>item.role==='coach'&&item.username===identifier&&item.password===password);
+    if(!user){authStatus.textContent='Coach login failed. Use one of the demo usernames and password coach123.';return;}
+    setCurrentUser(user);
+  }
+  authForm.reset();
+  renderAccountScreen();
+  renderSlots();
+  switchTab('account');
+});
+
+logoutBtn.addEventListener('click',()=>{
+  if(firebaseAuth){
+    firebaseAuth.signOut().catch(console.error);
+  }
+  setCurrentUser(null);
+  renderAccountScreen();
+  renderSlots();
+});
+
+bookingLoginBtn.addEventListener('click',()=>switchTab('account'));
+
+coachQuickPicks.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-coach]');
+  if(!btn)return;
+  appCoach.value=btn.dataset.coach;
+  appSlot.value='';
+  renderSlots();
+});
+
+appCoach.addEventListener('change',renderSlots);
+appDate.addEventListener('change',()=>{
+  appSlot.value='';
+  renderSlots();
+});
+appSlotGrid.addEventListener('click',e=>{
+  const btn=e.target.closest('[data-slot]');
+  if(!btn)return;
+  appSlot.value=btn.dataset.slot;
+  renderSlots();
+});
+bookingResetBtn.addEventListener('click',resetBookingForm);
+bookingConfirmClose.addEventListener('click',hideBookingConfirmation);
+bookingConfirmModal.addEventListener('click',event=>{
+  if(event.target===bookingConfirmModal)hideBookingConfirmation();
+});
+coachCalendarDate.addEventListener('change',renderCoachCalendar);
+
+coachBookingsList.addEventListener('change',event=>{
+  const dateInput=event.target.closest('[data-reschedule-date]');
+  if(dateInput){
+    const bookingId=dateInput.dataset.rescheduleDate;
+    if(!rescheduleDrafts[bookingId])rescheduleDrafts[bookingId]={date:dateInput.value,slot:''};
+    rescheduleDrafts[bookingId].date=dateInput.value;
+    rescheduleDrafts[bookingId].slot='';
+    renderCoachCalendar();
+    return;
+  }
+  const slotSelect=event.target.closest('[data-reschedule-slot]');
+  if(slotSelect){
+    const bookingId=slotSelect.dataset.rescheduleSlot;
+    const dateInput=slotSelect.closest('.reschedule-box')?.querySelector('[data-reschedule-date]');
+    if(!rescheduleDrafts[bookingId])rescheduleDrafts[bookingId]={date:dateInput?.value||'',slot:''};
+    if(!rescheduleDrafts[bookingId].date)rescheduleDrafts[bookingId].date=dateInput?.value||'';
+    rescheduleDrafts[bookingId].slot=slotSelect.value;
+  }
+});
+
+coachBookingsList.addEventListener('click',async event=>{
+  const confirmButton=event.target.closest('[data-confirm-booking]');
+  if(confirmButton){
+    const bookingId=confirmButton.dataset.confirmBooking;
+    const booking=getBookings().find(item=>item.id===bookingId);
+    if(!booking)return;
+    await upsertBookingRecord({...booking,status:'confirmed'});
+    renderCoachCalendar();
+    renderClientBookings();
+    return;
+  }
+  const rescheduleButton=event.target.closest('[data-save-reschedule]');
+  if(rescheduleButton){
+    const bookingId=rescheduleButton.dataset.saveReschedule;
+    const booking=getBookings().find(item=>item.id===bookingId);
+    const rescheduleBox=rescheduleButton.closest('.reschedule-box');
+    const nextDate=rescheduleBox?.querySelector('[data-reschedule-date]')?.value || rescheduleDrafts[bookingId]?.date || '';
+    const nextSlot=rescheduleBox?.querySelector('[data-reschedule-slot]')?.value || rescheduleDrafts[bookingId]?.slot || '';
+    if(!booking||!nextDate||!nextSlot){return;}
+    const matchedSlot=getSlots(booking.coach,nextDate,booking.id).find(item=>item.label===nextSlot);
+    if(!matchedSlot){return;}
+    await upsertBookingRecord({...booking,date:nextDate,slot:nextSlot,slotStart:matchedSlot.start,status:'rescheduled',durationMinutes:SESSION,pricePounds:SESSION_PRICE});
+    delete rescheduleDrafts[bookingId];
+    renderCoachCalendar();
+    renderClientBookings();
+  }
+});
+
+document.getElementById('appBookingForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!currentUser||currentUser.role!=='client'){appStatus.textContent='Log in as a client to request a session.';return;}
+  const name=document.getElementById('appName').value.trim();
+  const phone=document.getElementById('appPhone').value.trim();
+  const cid=appCoach.value,ds=appDate.value,slot=appSlot.value;
+  if(!name||!phone||!cid||!ds||!slot){appStatus.textContent='Please fill in all fields and select a time slot.';return;}
+  const slots=getSlots(cid,ds);
+  const chosen=slots.find(s=>s.label===slot);
+  if(!chosen){appStatus.textContent='That slot is no longer available. Please choose another.';renderSlots();return;}
+  try{
+    await upsertBookingRecord({id:makeId('booking'),coach:cid,coachName:coaches.find(c=>c.id===cid).name,date:ds,slot,slotStart:chosen.start,clientId:currentUser.id,clientName:name,clientPhone:phone,notes:document.getElementById('appNotes').value.trim(),status:'pending',durationMinutes:SESSION,pricePounds:SESSION_PRICE,createdAt:new Date().toISOString()});
+  }catch(_error){
+    appStatus.textContent='Could not save the booking request. Check your Firebase setup and try again.';
+    return;
+  }
+  const savedCoach=coaches.find(c=>c.id===cid).name;
+  const savedDate=fmtDate(ds);
+  const savedSlot=slot;
+  resetBookingForm();
+  renderSlots();
+  renderClientBookings();
+  appStatus.textContent='';
+  showBookingConfirmation({coach:savedCoach,date:savedDate,slot:savedSlot});
+});
+
+if (realtime) {
+  realtime.subscribeBookings(() => {
+    renderSlots();
+    renderAccountScreen();
+  });
+  realtime.subscribeUsers(() => {
+    renderAccountScreen();
+  });
+}
+
+if(firebaseAuth){
+  firebaseAuth.onAuthStateChanged(async firebaseUser=>{
+    if(!firebaseUser){
+      setCurrentUser(null);
+      renderAccountScreen();
+      renderSlots();
+      return;
+    }
+    try{
+      const profile=await resolveFirebaseProfile(firebaseUser);
+      setCurrentUser(profile);
+      renderAccountScreen();
+      renderSlots();
+    }catch(error){
+      console.error(error);
+    }
+  });
+}
+
+renderCoachQuickPicks();
+renderAuthFormState();
+renderAccountScreen();
+renderSlots();
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(console.error);
+  });
+}
+</script>
+</body>
+</html>
